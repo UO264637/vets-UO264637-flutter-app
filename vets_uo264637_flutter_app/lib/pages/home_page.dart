@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vets_uo264637_flutter_app/pages/user_details.dart';
 
 import 'package:vets_uo264637_flutter_app/src/user.dart';
 import 'user_sigup_form.dart';
@@ -31,27 +32,7 @@ class StateHomePage extends State<HomePage> {
         itemBuilder: (context, index) {
           return ListTile(
             onTap: () {
-              User currentUser = users[index];
-              Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => UserEdit(user: currentUser)))
-                  .then((modifiedUser) => {
-                        if (modifiedUser != null)
-                          {
-                            setState(() {
-                              users.removeAt(index);
-                            users.insert(index, modifiedUser);
-                              String message =
-                                  "El usuario ${modifiedUser.name} ha sido actualizado correctamenet.";
-                              showDialog(
-                                context: context,
-                                builder: (context) => CustomAlertDialog.create(
-                                    context, 'Información', message),
-                              );
-                            })
-                          }
-                      });
+              viewUser(context, index);
             },
             onLongPress: () {
               deleteUser(context, users[index]);
@@ -92,6 +73,40 @@ class StateHomePage extends State<HomePage> {
         child: const Icon(Icons.add),
       ),
     ); // Scaffor
+  }
+
+  viewUser(BuildContext context, index) {
+    User currentUser = users[index];
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => UserDetails(user: currentUser)
+      )
+    );
+  }
+
+  updateUser(BuildContext context, index) {
+    User currentUser = users[index];
+              Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => UserEdit(user: currentUser)))
+                  .then((modifiedUser) => {
+                        if (modifiedUser != null)
+                          {
+                            setState(() {
+                              users.removeAt(index);
+                            users.insert(index, modifiedUser);
+                              String message =
+                                  "El usuario ${modifiedUser.name} ha sido actualizado correctamenet.";
+                              showDialog(
+                                context: context,
+                                builder: (context) => CustomAlertDialog.create(
+                                    context, 'Información', message),
+                              );
+                            })
+                          }
+                      });
   }
 
   deleteUser(BuildContext context, User user) {
