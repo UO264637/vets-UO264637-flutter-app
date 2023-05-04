@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:vets_uo264637_flutter_app/src/user.dart';
 import 'user_sigup_form.dart';
-import 'package:vets_uo264637_flutter_app/custom_alert_dialog.dart';
+import 'package:vets_uo264637_flutter_app/pages/custom_alert_dialog.dart';
+import 'package:vets_uo264637_flutter_app/pages/user_edit.dart';
 
 class HomePage extends StatefulWidget {
   //final String _title;
@@ -29,7 +30,29 @@ class StateHomePage extends State<HomePage> {
         itemCount: users.length,
         itemBuilder: (context, index) {
           return ListTile(
-            onTap: () {},
+            onTap: () {
+              User currentUser = users[index];
+              Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => UserEdit(user: currentUser)))
+                  .then((modifiedUser) => {
+                        if (modifiedUser != null)
+                          {
+                            setState(() {
+                              users.removeAt(index);
+                            users.insert(index, modifiedUser);
+                              String message =
+                                  "El usuario ${modifiedUser.name} ha sido actualizado correctamenet.";
+                              showDialog(
+                                context: context,
+                                builder: (context) => CustomAlertDialog.create(
+                                    context, 'Información', message),
+                              );
+                            })
+                          }
+                      });
+            },
             onLongPress: () {},
             title: Text("${users[index].name} ${users[index].surname}"),
             subtitle: Text("${'Teléfono:'}${users[index].phone}"),
