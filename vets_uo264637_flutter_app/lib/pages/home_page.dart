@@ -11,15 +11,15 @@ class HomePage extends StatefulWidget {
   const HomePage({super.key}); // recibimos el titulo en el constructor
 
   @override
-  State<StatefulWidget> createState() => StateHomePage ();
+  State<StatefulWidget> createState() => StateHomePage();
 }
 
 class StateHomePage extends State<HomePage> {
   List<User> users = [
-    User("Pedro", "Alvarez", "pedro.alvarez.com", "034-999-999-977"),
-    User("María", "Alvarez", "pedro.alvarez.com", "034-999-999-978"),
-    User("Teresa", "Almonte", "teresa.almonte.com", "034-999-999-979"),
-    User("Juan", "Almonte", "juan.almonte.com", "034-999-999-988")
+    User("Pedro", "Alvarez", "pedro@alvarez.com", "034-999-999-977"),
+    User("María", "Alvarez", "pedro@alvarez.com", "034-999-999-978"),
+    User("Teresa", "Almonte", "teresa@almonte.com", "034-999-999-979"),
+    User("Juan", "Almonte", "juan@almonte.com", "034-999-999-988")
   ];
   @override
   Widget build(BuildContext context) {
@@ -51,12 +51,14 @@ class StateHomePage extends State<HomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const UserSignUpForm()))
-            .then((newUser) => {
-                if (newUser != null)
-                {
-                  setState(() {
+          Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const UserSignUpForm()))
+              .then((newUser) => {
+                    if (newUser != null)
+                      {
+                        setState(() {
                           users.add(newUser);
                           String message =
                               "El usuario ${newUser.name} ha sido registrado";
@@ -65,9 +67,9 @@ class StateHomePage extends State<HomePage> {
                             builder: (context) => CustomAlertDialog.create(
                                 context, 'Información', message),
                           );
-                  })
-                }
-          }),
+                        })
+                      }
+                  }),
         },
         tooltip: "Registrar usuario",
         child: const Icon(Icons.add),
@@ -78,35 +80,33 @@ class StateHomePage extends State<HomePage> {
   viewUser(BuildContext context, index) {
     User currentUser = users[index];
     Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => UserDetails(user: currentUser)
-      )
-    );
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                UserDetails(user: currentUser, updateUser: updateUser, index: index)));
   }
 
-  updateUser(BuildContext context, index) {
-    User currentUser = users[index];
-              Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => UserEdit(user: currentUser)))
-                  .then((modifiedUser) => {
-                        if (modifiedUser != null)
-                          {
-                            setState(() {
-                              users.removeAt(index);
-                            users.insert(index, modifiedUser);
-                              String message =
-                                  "El usuario ${modifiedUser.name} ha sido actualizado correctamenet.";
-                              showDialog(
-                                context: context,
-                                builder: (context) => CustomAlertDialog.create(
-                                    context, 'Información', message),
-                              );
-                            })
-                          }
-                      });
+  updateUser(BuildContext context, User currentUser, int index) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                UserEdit(user: currentUser))).then((modifiedUser) => {
+          if (modifiedUser != null)
+            {
+              setState(() {
+                users.removeAt(index);
+                users.insert(index, modifiedUser);
+                String message =
+                    "El usuario ${modifiedUser.name} ha sido actualizado correctamenet.";
+                showDialog(
+                  context: context,
+                  builder: (context) =>
+                      CustomAlertDialog.create(context, 'Información', message),
+                );
+              })
+            }
+        });
   }
 
   deleteUser(BuildContext context, User user) {

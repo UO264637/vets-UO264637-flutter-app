@@ -48,6 +48,9 @@ class StateUserEdit extends State<UserEdit> {
                   if (value == null || value.isEmpty) {
                     return 'por Favor digite el nombre';
                   }
+                  else if (value.length < 2 || value.length > 24) {
+                    return 'El nombre debe tener entre 2 y 24 caracteres';
+                  }
                   return null;
                 },
                  onSaved: (value) => nameController.text = value ?? '',
@@ -63,6 +66,9 @@ class StateUserEdit extends State<UserEdit> {
                   if (value == null || value.isEmpty) {
                     return 'por favor digite los apellidos';
                   }
+                  else if (value.length < 6 || value.length > 48) {
+                    return 'Los apellidos deben tener entre 6 y 48 caracteres';
+                  }
                   return null;
                 },
                 onSaved: (value) {
@@ -77,8 +83,12 @@ class StateUserEdit extends State<UserEdit> {
                   border: OutlineInputBorder(),
                 ),
                 validator: (value) {
+                  final RegExp regex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
                   if (value == null || value.isEmpty) {
                     return 'por favor digite el  email';
+                  }
+                  else if (!regex.hasMatch(value)) {
+                    return 'El email debe seguir el formato "nombre@dominio.com"';
                   }
                   return null;
                 },
@@ -90,12 +100,16 @@ class StateUserEdit extends State<UserEdit> {
                 controller:phoneController,
                 decoration: const InputDecoration(
                   labelText: 'Telefóno',
-                  hintText: 'Introduce tu email',
+                  hintText: 'Introduce tu teléfono',
                   border: OutlineInputBorder(),
                 ),
                 validator: (value) {
+                  final RegExp regex = RegExp(r'^\d{3}-\d{3}-\d{3}-\d{3}$');
                   if (value == null || value.isEmpty) {
                     return 'por favor digite el telefono ';
+                  }
+                  else if (!regex.hasMatch(value)) {
+                    return 'El teléfono debe seguir el formato "999-999-999-999"';
                   }
                   return null;
                 },
@@ -113,6 +127,7 @@ class StateUserEdit extends State<UserEdit> {
                       );
                       _formKey.currentState!.save();
                       User user = User(nameController.text, surnameController.text, emailController.text, phoneController.text);
+                      Navigator.pop(context, user);
                       Navigator.pop(context, user);
                     }
                   },
